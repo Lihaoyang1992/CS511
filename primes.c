@@ -237,7 +237,6 @@ int main(int argc, char *argv[]) {
 	else {
 		/* EVEN CHILD SECTION */
 		int primes_num;
-		//printf("fd is %d\n", write_fd);
 		primes_num = write_to_fd(write_fd, bot, top);
 		return primes_num;
 	}
