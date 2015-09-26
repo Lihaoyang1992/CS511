@@ -91,8 +91,6 @@ int write_to_fd(const int wfd, int bot, int top)
 }
 
 int main(int argc, char *argv[]) {
-	if (check_arg(argc, argv) != EXIT_SUCCESS)
-		return EXIT_FAILURE;
 	/* pipe used by odd child */
 	int* pipe_fds;
 	/* char* used by even child */
@@ -115,6 +113,10 @@ int main(int argc, char *argv[]) {
 	parent_fds = (int *)malloc(sizeof(int) * (argc - 1));
 	child_pid = (int *)malloc(sizeof(int) * (argc - 1));
 	parent_id = getpid();
+
+	if (check_arg(argc, argv) != EXIT_SUCCESS)
+		return EXIT_FAILURE;
+
 	for (i = 0; i < argc - 1; ++i) {
 		if ((i & 1) == 0) {
 			/* odd child create pipe */
@@ -169,13 +171,14 @@ int main(int argc, char *argv[]) {
 	if (getpid() == parent_id) {
 		/* PARENT SECTION */
 		int* primes_num;
-		primes_num = (int *)malloc(sizeof(int) * (argc - 1));
-		for (i = 0; i < argc - 1; ++i)
-			primes_num[i] = 0;
 		int set_fd_num;
 		int deleted_num;
 
 		deleted_num = 0;
+
+		primes_num = (int *)malloc(sizeof(int) * (argc - 1));
+		for (i = 0; i < argc - 1; ++i)
+			primes_num[i] = 0;
 		/* parent use select(3) read data from fds */
 		for(;;) {
 			FD_ZERO(&call_set);
