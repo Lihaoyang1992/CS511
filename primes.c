@@ -226,6 +226,8 @@ int main(int argc, char *argv[]) {
 			if (deleted_num == argc - 1)
 				break;
 		}
+		
+		free(primes_num);
 	}
 	else if ((i & 1) == 0) {
 		/* ODD CHILD SECTION */
@@ -243,5 +245,9 @@ int main(int argc, char *argv[]) {
 		primes_num = write_to_fd(write_fd, bot, top);
 		return primes_num;
 	}
+	/* free all allocated memory */
+	free(pipe_fds);
+	free(parent_fds);
+	free(child_pid);
 	return EXIT_SUCCESS;
 }
