@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 	if (check_arg(argc, argv) != EXIT_SUCCESS)
 		return EXIT_FAILURE;
 	/* pipe used by odd child */
-	int *pipe_fds;
+	int* pipe_fds;
 	/* char* used by even child */
 	char* myfifo;
 	
@@ -172,7 +172,8 @@ int main(int argc, char *argv[]) {
 		primes_num = (int *)malloc(sizeof(int) * (argc - 1));
 		for (i = 0; i < argc - 1; ++i)
 			primes_num[i] = 0;
-		int set_fd_num, deleted_num ;
+		int set_fd_num;
+		int deleted_num;
 
 		deleted_num = 0;
 		/* parent use select(3) read data from fds */
@@ -228,7 +229,6 @@ int main(int argc, char *argv[]) {
 		/* let i be the real index */
 		int primes_num;
 		close(parent_fds[i]);
-		//printf("fd is %d\n", write_fd);
 		primes_num = write_to_fd(write_fd, bot, top);
 		close(write_fd);
 
