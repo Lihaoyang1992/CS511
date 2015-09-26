@@ -51,6 +51,7 @@ int wait_error_check(int pid, int primes_num) {
 int find_and_submit_primes(int wfd, int bot, int top) {
 	int flag = 0;
 	int primes_num = 0;
+	int i, j;
 	if (top < 2)
 		return CHECK_SUCCESS;
 	if (bot == 2)
@@ -63,11 +64,9 @@ int find_and_submit_primes(int wfd, int bot, int top) {
 	}
 	if ((bot & 1) == 0)
 		bot++;
-	int i;
 	for (i = bot; i <= top; i += 2)
 	{
 		flag = 0;
-		int j;
 		for (j = 2; j <= i / 2; j++)
 		{
 			if ((i % j) == 0)
@@ -95,24 +94,28 @@ int main(int argc, char *argv[]) {
 	if (check_arg(argc, argv) != EXIT_SUCCESS)
 		return EXIT_FAILURE;
 	/* pipe used by odd child */
-	int *pipe_fds = (int *)malloc(sizeof(int) * (argc - 1));
+	int *pipe_fds;
 	/* char* used by even child */
 	char* myfifo;
 	
 	/* all file descriptor hold by parent */
-	int *parent_fds = (int *)malloc(sizeof(int) * (argc - 1));
+	int *parent_fds;
 	/* fd used by child to write */
 	int write_fd;
 	int max_fd;
 	
 	//int child_pid[argc - 1];
-	int *child_pid = (int *)malloc(sizeof(int) * (argc - 1));
-	pid_t parent_id = getpid();
+	int *child_pid;
+	pid_t parent_id;
 	
 	fd_set call_set;
 
 	int bot, top, i, num, prime;
 
+	pipe_fds = (int *)malloc(sizeof(int) * (argc - 1));
+	parent_fds = (int *)malloc(sizeof(int) * (argc - 1));
+	child_pid = (int *)malloc(sizeof(int) * (argc - 1));
+	parent_id = getpid();
 	for (i = 0; i < argc - 1; ++i) {
 		if ((i & 1) == 0) {
 			/* odd child create pipe */
@@ -166,7 +169,8 @@ int main(int argc, char *argv[]) {
 
 	if (getpid() == parent_id) {
 		/* PARENT SECTION */
-		int* primes_num = (int *)malloc(sizeof(int) * (argc - 1));
+		int* primes_num;
+		primes_num = (int *)malloc(sizeof(int) * (argc - 1));
 		for (i = 0; i < argc - 1; ++i)
 			primes_num[i] = 0;
 		int set_fd_num, deleted_num = 0;
