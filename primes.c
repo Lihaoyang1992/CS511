@@ -104,7 +104,6 @@ int main(int argc, char *argv[]) {
 	int write_fd;
 	int max_fd;
 	
-	//int child_pid[argc - 1];
 	int *child_pid;
 	pid_t parent_id;
 	
@@ -173,7 +172,9 @@ int main(int argc, char *argv[]) {
 		primes_num = (int *)malloc(sizeof(int) * (argc - 1));
 		for (i = 0; i < argc - 1; ++i)
 			primes_num[i] = 0;
-		int set_fd_num, deleted_num = 0;
+		int set_fd_num, deleted_num ;
+
+		deleted_num = 0;
 		/* parent use select(3) read data from fds */
 		for(;;) {
 			FD_ZERO(&call_set);
