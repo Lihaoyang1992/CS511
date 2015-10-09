@@ -123,7 +123,7 @@ main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	if (sem_init(&mutex_sem, 0, 1) == -1) {	/* 1 for mutex */
+	if (sem_init(&mutex_sem, 0, (unsigned int)1) == -1) {	/* 1 for mutex */
 		perror("sem_init");
 		return EXIT_FAILURE;
 	}
@@ -131,7 +131,7 @@ main(int argc, char *argv[])
 		perror("sem_init");
 		return EXIT_FAILURE;
 	}
-	if (sem_init(&space_sem, 0, 1) == -1) {	/* buffer can store 1 line */
+	if (sem_init(&space_sem, 0, (unsigned int)1) == -1) {	/* buffer can store 1 line */
 		perror("sem_init");
 		return EXIT_FAILURE;
 	}
