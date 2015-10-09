@@ -13,21 +13,16 @@ struct argument_t {
 	FILE	*stream;
 };
 
-struct return_t {
-	ssize_t	bytes;
-};
-
 static void *
 read_func(void *arg)
 {
 	struct argument_t	*args;
-	struct return_t	*res;	/* used for return bytes */
 	FILE	*istream;
 	size_t	len;
 	ssize_t	read, size = 0;
 	char	*line;
+	int	*retval;
 
-	res = malloc(sizeof(struct return_t));
 	args = arg;
 	istream = args->stream;
 	
@@ -68,21 +63,21 @@ read_func(void *arg)
 	pthread_mutex_unlock(&lock);
 	printf("fill thread: wrote [%s] into buffer"
 			" (nwrritten=%ld)\n", "QUIT", read);
-	res->bytes = size;
-	sleep(1);
-	return res;
+	
+	retval = (int *)malloc(sizeof(int));
+	*retval = size;
+	return (void *)retval;
 }
 
 static void *
 write_func(void *arg)
 {
 	struct argument_t	*args;
-	struct return_t	*res;	/* used for return bytes */
 	FILE	*ostream;
 	ssize_t	len, size = 0;
 	char	*data = NULL;
+	int	*retval;
 
-	res = malloc(sizeof(struct return_t));
 	data = malloc(CBUF_CAPACITY * sizeof(char));
 	args = arg;
 	ostream = args->stream;
@@ -112,11 +107,11 @@ write_func(void *arg)
 			break;
 		fwrite(data, sizeof(char), len, ostream);
 	}
-	res->bytes = size;
-
+	
 	free(data);
-	sleep(1);
-	return res;
+	retval = (int *)malloc(sizeof(int));
+	*retval = size;
+	return (void *)retval;
 }
 
 int
