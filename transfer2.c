@@ -55,6 +55,8 @@ read_func(void *arg)
 	ENTER_CRIT_SEC(space_sem, mutex_sem);
 	read = cbuf_copy_in("QUIT");
 	OUT_CRIT_SEC(occupied_sem, mutex_sem);
+	printf("fill thread: wrote [%s] into buffer"
+				" (nwrritten=%ld)\n", "QUIT", read);
 
 	retval = (int *)malloc(sizeof(int));
 	*retval = 0;
