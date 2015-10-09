@@ -10,10 +10,6 @@
 static pthread_mutex_t lock;
 static FILE	*istream, *ostream;
 
-struct argument_t {
-	FILE	*stream;
-};
-
 static void *
 read_func(void *arg)
 {
@@ -60,7 +56,10 @@ read_func(void *arg)
 	printf("fill thread: wrote [%s] into buffer"
 			" (nwrritten=%ld)\n", "QUIT", read);
 	
-	retval = (int *)malloc(sizeof(int));
+	if ((retval = (int *)malloc(sizeof(int))) == NULL) {
+		perror("malloc");
+		_exit(2);
+	}
 	*retval = 0;
 	return (void *)retval;
 }
@@ -115,7 +114,6 @@ int
 main(int argc, char *argv[])
 {
 	pthread_t	r_tid, w_tid;
-	struct argument_t	r_arg, w_arg;
 	void	*r_res, *w_res;
 
 	if (argc != 3) {
@@ -142,8 +140,8 @@ main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	fclose(r_arg.stream);
-	fclose(w_arg.stream);
+	fclose(istream);
+	fclose(ostream);
 	cbuf_terminate();
 	free(r_res);
 	free(w_res);
