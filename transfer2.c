@@ -72,7 +72,6 @@ read_func(void *arg)
 			" (nwrritten=%ld)\n", "QUIT", read);
 	res->bytes = size;
 
-	fclose(istream);
 	return res;
 }
 
@@ -107,7 +106,6 @@ write_func(void *arg)
 	}
 	res->bytes = size;
 
-	fclose(ostream);
 	free(data);
 	return res;
 }
@@ -163,6 +161,9 @@ main(int argc, char *argv[])
 		perror("sem_destroy");
 		return EXIT_FAILURE;
 	}
+
+	fclose(r_arg.stream);
+	fclose(w_arg.stream);
 	cbuf_terminate();
 	free(r_res);
 	free(w_res);
