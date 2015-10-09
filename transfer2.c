@@ -71,7 +71,8 @@ read_func(void *arg)
 	printf("fill thread: wrote [%s] into buffer"
 			" (nwrritten=%ld)\n", "QUIT", read);
 	res->bytes = size;
-
+	printf("Hello! res->bytes change normally!"
+		"in read_func\n");
 	return res;
 }
 
@@ -105,7 +106,8 @@ write_func(void *arg)
 		size += len;
 	}
 	res->bytes = size;
-	printf("Hello! res->bytes change normally!\n");
+	printf("Hello! res->bytes change normally!"
+		"in write_func\n");
 	free(data);
 	printf("Hello! free data normally!\n");
 	return res;
