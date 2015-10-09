@@ -115,6 +115,7 @@ write_func(void *arg)
 	res->bytes = size;
 
 	free(data);
+	sleep(1);
 	return res;
 }
 
