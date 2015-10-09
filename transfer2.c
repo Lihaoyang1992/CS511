@@ -56,6 +56,7 @@ read_func(void *arg)
 	
 	while((read = getline(&line, &len, istream)) != -1) {
 		ENTER_CRIT_SEC(space_sem, mutex_sem);
+		printf("%d\n", space_sem);
 		/* enter critical section */
 		/* have enough space to write to buffer */
 		read = cbuf_copy_in(line);
