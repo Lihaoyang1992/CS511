@@ -69,7 +69,7 @@ read_func(void *arg)
 	printf("fill thread: wrote [%s] into buffer"
 			" (nwrritten=%ld)\n", "QUIT", read);
 	res->bytes = size;
-
+	sleep(1);
 	return res;
 }
 
