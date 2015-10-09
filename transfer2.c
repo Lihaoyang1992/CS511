@@ -90,16 +90,20 @@ write_func(void *arg)
 	data = calloc(CBUF_CAPACITY, 1);
 	args = arg;
 	ostream = args->stream;
-
-	/* fwrite(buffer, sizeof(char), size, ostream) */
-	ENTER_CRIT_SEC(occupied_sem, mutex_sem);
-	/* out of critical section */
-	len = cbuf_copy_out(data);
-	size += len;
-	fwrite(data, sizeof(char), len, ostream);
-	OUT_CRIT_SEC(space_sem, mutex_sem);
-	printf("drain thread: read [%s]"
-			" from buffer (nread=%ld)\n", data, len);
+	while (1) {
+		/* fwrite(buffer, sizeof(char), size, ostream) */
+		ENTER_CRIT_SEC(occupied_sem, mutex_sem);
+		/* out of critical section */
+		len = cbuf_copy_out(data);
+		OUT_CRIT_SEC(space_sem, mutex_sem);
+		printf("drain thread: read [%s]"
+				" from buffer (nread=%ld)\n", data, len);
+		/* case QIUT to break out */
+		if (strcmp(date, "QUIT") == 0)
+			break;
+		fwrite(data, sizeof(char), len, ostream);
+		size += len;
+	}
 	res->bytes = size;
 
 	fclose(ostream);
