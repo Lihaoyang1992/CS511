@@ -95,6 +95,7 @@ write_func(void *arg)
 		/* out of critical section */
 		len = cbuf_copy_out(data);
 		OUT_CRIT_SEC(space_sem, mutex_sem);
+		size += len;
 		printf("drain thread: read [%s]"
 				" from buffer (nread=%ld)\n", data, len);
 		/* case QIUT to break out */
@@ -103,7 +104,6 @@ write_func(void *arg)
 			break;
 		}
 		fwrite(data, sizeof(char), len, ostream);
-		size += len;
 	}
 	printf("Hello! while loop break normally!"
 		"in write_func\n");
