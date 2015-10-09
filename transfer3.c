@@ -56,10 +56,13 @@ read_func(void *arg)
 	printf("fill thread: wrote [%s] into buffer"
 			" (nwrritten=%ld)\n", "QUIT", read);
 	
+	/*
 	if ((retval = (int *)malloc(sizeof(int))) == NULL) {
 		perror("malloc");
 		_exit(2);
 	}
+	*/
+	retval = (int *)malloc(sizeof(int));
 	*retval = 0;
 	return (void *)retval;
 }
