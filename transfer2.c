@@ -5,7 +5,7 @@
 #include <semaphore.h>
 #include "cbuf.c"
 
-sem_t *mutex_sem, *occupied_sem, *space_sem;
+sem_t mutex_sem, occupied_sem, space_sem;
 
 struct argument_t {
 	FILE	*stream;
@@ -99,7 +99,7 @@ write_func(void *arg)
 		printf("drain thread: read [%s]"
 				" from buffer (nread=%ld)\n", data, len);
 		/* case QIUT to break out */
-		if (strcmp(date, "QUIT") == 0)
+		if (strcmp(data, "QUIT") == 0)
 			break;
 		fwrite(data, sizeof(char), len, ostream);
 		size += len;
