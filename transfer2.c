@@ -105,6 +105,8 @@ write_func(void *arg)
 		fwrite(data, sizeof(char), len, ostream);
 		size += len;
 	}
+	printf("Hello! while loop break normally!"
+		"in write_func\n");
 	res->bytes = size;
 	printf("Hello! res->bytes change normally!"
 		"in write_func\n");
