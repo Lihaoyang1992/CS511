@@ -7,25 +7,17 @@
 #define SUSPEND_READ	1
 #define SUSPEND_WRITE	1000
 
-pthread_mutex_t lock;
-
-struct argument_t {
-	FILE	*stream;
-};
+static pthread_mutex_t lock;
+static FILE	*istream, *ostream;
 
 static void *
 read_func(void *arg)
 {
-	struct argument_t	*args;
-	FILE	*istream;
 	size_t	len;
 	ssize_t	read, size = 0;
 	char	*line;
 	int	*retval;
 
-	args = arg;
-	istream = args->stream;
-	
 	while((read = getline(&line, &len, istream)) != -1) {
 		while (1) {
 			if (usleep(SUSPEND_READ)) {
@@ -65,22 +57,18 @@ read_func(void *arg)
 			" (nwrritten=%ld)\n", "QUIT", read);
 	
 	retval = (int *)malloc(sizeof(int));
-	*retval = size;
+	*retval = 0;
 	return (void *)retval;
 }
 
 static void *
 write_func(void *arg)
 {
-	struct argument_t	*args;
-	FILE	*ostream;
 	ssize_t	len, size = 0;
 	char	*data = NULL;
 	int	*retval;
 
 	data = malloc(CBUF_CAPACITY * sizeof(char));
-	args = arg;
-	ostream = args->stream;
 
 	/* fwrite(buffer, sizeof(char), size, ostream) */
 	while (1) {
@@ -105,12 +93,17 @@ write_func(void *arg)
 				" from buffer (nread=%ld)\n", data, len);
 		if (strcmp(data, "QUIT") == 0)
 			break;
-		fwrite(data, sizeof(char), len, ostream);
+		if (fwrite(data, sizeof(char), len, ostream)) {
+			if (ferror(ostream)) {
+				perror("fwrite");
+				_exit(2);
+			}
+		}
 	}
 	
 	free(data);
 	retval = (int *)malloc(sizeof(int));
-	*retval = size;
+	*retval = 0;
 	return (void *)retval;
 }
 
@@ -118,7 +111,6 @@ int
 main(int argc, char *argv[])
 {
 	pthread_t	r_tid, w_tid;
-	struct argument_t	r_arg, w_arg;
 	void	*r_res, *w_res;
 
 	if (argc != 3) {
@@ -126,20 +118,18 @@ main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	if ((r_arg.stream = fopen(argv[1], "r")) == NULL) {
+	if ((istream = fopen(argv[1], "r")) == NULL) {
 		perror("fopen");
 		return EXIT_FAILURE;
 	}
-	if ((w_arg.stream = fopen(argv[2], "w")) == NULL) {
+	if ((ostream = fopen(argv[2], "w")) == NULL) {
 		perror("fopen");
 		return EXIT_FAILURE;
 	}
 
 	cbuf_init();
-	pthread_create(&r_tid, NULL,
-					&read_func, &r_arg);
-	pthread_create(&w_tid, NULL,
-					&write_func, &w_arg);
+	pthread_create(&r_tid, NULL, &read_func, NULL);
+	pthread_create(&w_tid, NULL, &write_func, NULL);
 
 	if (pthread_join(r_tid, &r_res) ||
 		pthread_join(w_tid, &w_res)) {
@@ -147,8 +137,8 @@ main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	fclose(r_arg.stream);
-	fclose(w_arg.stream);
+	fclose(istream);
+	fclose(ostream);
 	cbuf_terminate();
 	free(r_res);
 	free(w_res);
