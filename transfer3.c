@@ -97,7 +97,12 @@ write_func(void *arg)
 				" from buffer (nread=%ld)\n", data, len);
 		if (strcmp(data, "QUIT") == 0)
 			break;
-		fwrite(data, sizeof(char), len, ostream);
+		if (fwrite(data, sizeof(char), len, ostream)) {
+			if (ferror(ostream)) {
+				perror("fwrite");
+				_exit(2);
+			}
+		}
 	}
 	
 	free(data);
