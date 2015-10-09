@@ -105,8 +105,9 @@ write_func(void *arg)
 		size += len;
 	}
 	res->bytes = size;
-
+	printf("Hello! res->bytes change normally!\n");
 	free(data);
+	printf("Hello! free data normally!\n");
 	return res;
 }
 
