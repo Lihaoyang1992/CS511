@@ -61,7 +61,7 @@ read_func(void *arg)
 			" (nwrritten=%ld)\n", "QUIT", read);
 	
 	retval = (int *)malloc(sizeof(int));
-	*retval = size;
+	*retval = 0;
 	return (void *)retval;
 }
 
@@ -107,7 +107,7 @@ write_func(void *arg)
 	
 	free(data);
 	retval = (int *)malloc(sizeof(int));
-	*retval = size;
+	*retval = 0;
 	return (void *)retval;
 }
 
