@@ -154,7 +154,7 @@ main(int argc, char *argv[])
 		perror("pthread_join");
 		return EXIT_FAILURE;
 	}
-
+	printf("Hello! pthreads exit normally!\n");
 	if (sem_destroy(&mutex_sem) || 
 		sem_destroy(&space_sem) ||
 		sem_destroy(&occupied_sem)) {
