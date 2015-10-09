@@ -98,8 +98,10 @@ write_func(void *arg)
 		printf("drain thread: read [%s]"
 				" from buffer (nread=%ld)\n", data, len);
 		/* case QIUT to break out */
-		if (strcmp(data, "QUIT") == 0)
+		if (strcmp(data, "QUIT") == 0) {
+			printf("Hello! i had cased QUIT!\n");
 			break;
+		}
 		fwrite(data, sizeof(char), len, ostream);
 		size += len;
 	}
