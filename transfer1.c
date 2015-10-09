@@ -83,7 +83,7 @@ write_func(void *arg)
 	char	*data = NULL;
 
 	res = malloc(sizeof(struct return_t));
-	data = calloc(CBUF_CAPACITY, 1);
+	data = malloc(CBUF_CAPACITY * sizeof(char));
 	args = arg;
 	ostream = args->stream;
 
