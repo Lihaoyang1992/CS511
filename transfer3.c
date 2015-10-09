@@ -7,8 +7,8 @@
 #define SUSPEND_READ	1
 #define SUSPEND_WRITE	1000
 
-pthread_mutex_t lock;
-FILE	*istream, *ostream;
+static pthread_mutex_t lock;
+static FILE	*istream, *ostream;
 
 struct argument_t {
 	FILE	*stream;
@@ -17,13 +17,10 @@ struct argument_t {
 static void *
 read_func(void *arg)
 {
-	struct argument_t	*args;
 	size_t	len;
 	ssize_t	read, size = 0;
 	char	*line;
 	int	*retval;
-
-	args = arg;
 
 	while((read = getline(&line, &len, istream)) != -1) {
 		while (1) {
@@ -71,13 +68,11 @@ read_func(void *arg)
 static void *
 write_func(void *arg)
 {
-	struct argument_t	*args;
 	ssize_t	len, size = 0;
 	char	*data = NULL;
 	int	*retval;
 
 	data = malloc(CBUF_CAPACITY * sizeof(char));
-	args = arg;
 
 	/* fwrite(buffer, sizeof(char), size, ostream) */
 	while (1) {
