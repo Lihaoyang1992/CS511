@@ -5,15 +5,8 @@
 #include <semaphore.h>
 #include "cbuf.c"
 
-sem_t mutex_sem, occupied_sem, space_sem;
-
-struct argument_t {
-	FILE	*stream;
-};
-
-struct return_t {
-	ssize_t	bytes;
-};
+static sem_t	mutex_sem, occupied_sem, space_sem;
+static FILE	*istream, *ostream;
 
 #define ENTER_CRIT_SEC(syn_sem, mutex_sem)	\
 {	\
@@ -43,17 +36,11 @@ struct return_t {
 static void *
 read_func(void *arg)
 {
-	struct argument_t	*args;
-	struct return_t	*res;	/* used for return bytes */
-	FILE	*istream;
 	size_t	len;
 	ssize_t	read, size = 0;
 	char	*line;
+	int	*retval;
 
-	res = malloc(sizeof(struct return_t));
-	args = arg;
-	istream = args->stream;
-	
 	while((read = getline(&line, &len, istream)) != -1) {
 		ENTER_CRIT_SEC(space_sem, mutex_sem);
 		/* enter critical section */
@@ -68,27 +55,21 @@ read_func(void *arg)
 	ENTER_CRIT_SEC(space_sem, mutex_sem);
 	read = cbuf_copy_in("QUIT");
 	OUT_CRIT_SEC(occupied_sem, mutex_sem);
-	printf("fill thread: wrote [%s] into buffer"
-			" (nwrritten=%ld)\n", "QUIT", read);
-	res->bytes = size;
-	printf("Hello! res->bytes change normally!"
-		"in read_func\n");
-	return res;
+
+	retval = (int *)malloc(sizeof(int));
+	*retval = 0;
+	return (void *)retval;
 }
 
 static void *
 write_func(void *arg)
 {
-	struct argument_t	*args;
-	struct return_t	*res;	/* used for return bytes */
-	FILE	*ostream;
 	ssize_t	len, size = 0;
 	char	*data = NULL;
+	int	*retval;
 
-	res = malloc(sizeof(struct return_t));
 	data = calloc(CBUF_CAPACITY, 1);
-	args = arg;
-	ostream = args->stream;
+
 	while (1) {
 		/* fwrite(buffer, sizeof(char), size, ostream) */
 		ENTER_CRIT_SEC(occupied_sem, mutex_sem);
@@ -105,21 +86,17 @@ write_func(void *arg)
 		}
 		fwrite(data, sizeof(char), len, ostream);
 	}
-	printf("Hello! while loop break normally!"
-		"in write_func\n");
-	res->bytes = size;
-	printf("Hello! res->bytes change normally!"
-		"in write_func\n");
+
 	free(data);
-	printf("Hello! free data normally!\n");
-	return res;
+	retval = (int *)malloc(sizeof(int));
+	*retval = 0;
+	return (void *)retval;
 }
 
 int
 main(int argc, char *argv[])
 {
 	pthread_t	r_tid, w_tid;
-	struct argument_t	r_arg, w_arg;
 	void	*r_res, *w_res;
 
 	if (argc != 3) {
@@ -139,20 +116,18 @@ main(int argc, char *argv[])
 		perror("sem_init");
 		return EXIT_FAILURE;
 	}
-	if ((r_arg.stream = fopen(argv[1], "r")) == NULL) {
+	if ((istream = fopen(argv[1], "r")) == NULL) {
 		perror("fopen");
 		return EXIT_FAILURE;
 	}
-	if ((w_arg.stream = fopen(argv[2], "w")) == NULL) {
+	if ((ostream = fopen(argv[2], "w")) == NULL) {
 		perror("fopen");
 		return EXIT_FAILURE;
 	}
 
 	cbuf_init();
-	pthread_create(&r_tid, NULL,
-					&read_func, &r_arg);
-	pthread_create(&w_tid, NULL,
-					&write_func, &w_arg);
+	pthread_create(&r_tid, NULL, &read_func, NULL);
+	pthread_create(&w_tid, NULL, &write_func, NULL);
 
 	if (pthread_join(r_tid, &r_res) ||
 		pthread_join(w_tid, &w_res)) {
@@ -167,8 +142,8 @@ main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	fclose(r_arg.stream);
-	fclose(w_arg.stream);
+	fclose(istream);
+	fclose(ostream);
 	cbuf_terminate();
 	free(r_res);
 	free(w_res);
