@@ -14,8 +14,7 @@ int main(int argc, char *argv[])
 	char	buffer[BUFFER_SIZE];
 
 	if (argc != 3) {
-		fprintf(stderr, "<usage>: %s filename(for read) filename(for write)\n", 
-				getprogname());
+		fprintf(stderr, "<usage>: rw.c filename(for read) filename(for write)\n")
 		return EXIT_FAILURE;
 	}
 
