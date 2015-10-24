@@ -137,21 +137,26 @@ monitor_leave(struct cart_t *cart)
 							cart->num, cart->dir);
 
 	for (next_dir = get_right_dir(cart->dir); next_dir != cart->dir; next_dir = get_right_dir(next_dir)) {
+		(void)fprintf(stderr, "Try to signal %c thread to proceed intersection\n",
+								next_dir);
 		if (q_cartIsWaiting(next_dir)) {
+			next_cart = next_dir;
+
 			switch (next_dir) {
 				case Q_NORTH:
 					signal(&north_rail);
+					break;
 				case Q_WEST:
 					signal(&west_rail);
+					break;
 				case Q_SOUTH:
 					signal(&south_rail);
+					break;
 				case Q_EAST:
-					signal(&east_rail);			
+					signal(&east_rail);
+					break;
 			}
 		}
-
-		(void)fprintf(stderr, "Signal %c thread to proceed intersection\n",
-								next_dir);
 	}
 
 	unlock(&monitor);
