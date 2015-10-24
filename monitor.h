@@ -15,6 +15,8 @@ pthread_cond_t	west_rail;
 pthread_cond_t	south_rail;
 pthread_cond_t	east_rail;
 
+char	next_cart;
+
 extern void monitor_init();
 extern void monitor_arrive(struct cart_t *);
 extern void monitor_cross(struct cart_t *);
