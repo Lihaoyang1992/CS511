@@ -10,10 +10,10 @@
 #include "q.h"
 
 pthread_mutex_t	monitor;
-pthread_mutex_t	north_rail;
-pthread_mutex_t	west_rail;
-pthread_mutex_t	south_rail;
-pthread_mutex_t	east_rail;
+pthread_cond_t	north_rail;
+pthread_cond_t	west_rail;
+pthread_cond_t	south_rail;
+pthread_cond_t	east_rail;
 
 extern void monitor_init();
 extern void monitor_arrive(struct cart_t *);
