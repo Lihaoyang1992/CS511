@@ -55,18 +55,18 @@ signal(pthread_cond_t *cond)
 }
 
 void
-mutex_destory(pthread_mutex_t *mutex)
+mutex_destroy(pthread_mutex_t *mutex)
 {
-	if (pthread_mutex_destory(mutex) != 0) {
-		perror("pthread_mutex_destory");
+	if (pthread_mutex_destroy(mutex) != 0) {
+		perror("pthread_mutex_destroy");
 		exit(EXIT_FAILURE);
 	}
 }
 
 void
-cond_destory(pthread_cond_t *cond) {
-	if (pthread_cond_destory(cond) != 0) {
-		perror("pthread_cond_destory");
+cond_destroy(pthread_cond_t *cond) {
+	if (pthread_cond_destroy(cond) != 0) {
+		perror("pthread_cond_destroy");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -165,9 +165,9 @@ monitor_leave(struct cart_t *cart)
 void
 monitor_shutdown()
 {
-	mutex_destory(&monitor);
-	cond_destory(&north_rail);
-	cond_destory(&west_rail);
-	cond_destory(&south_rail);
-	cond_destory(&east_rail);
+	mutex_destroy(&monitor);
+	cond_destroy(&north_rail);
+	cond_destroy(&west_rail);
+	cond_destroy(&south_rail);
+	cond_destroy(&east_rail);
 }
