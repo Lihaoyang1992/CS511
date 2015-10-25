@@ -126,7 +126,9 @@ monitor_cross(struct cart_t *cart)
 	(void)fprintf(stderr, "Cart %d from %c enter intersection\n",
 							cart->num, cart->dir);
 
-	(void)fprintf(stderr, "Cart %d from %c enter intersection\n",
+	q_cartHasEntered(cart->dir);
+
+	(void)fprintf(stderr, "Cart %d from %c cross intersection\n",
 							cart->num, cart->dir);
 
 	unlock(&monitor);
