@@ -79,6 +79,8 @@ monitor_init()
 	cond_init(&west_rail);
 	cond_init(&south_rail);
 	cond_init(&east_rail);
+
+	first = 0;	/* set no cart has been proceeded */
 }
 
 void
@@ -87,9 +89,11 @@ monitor_arrive(struct cart_t *cart)
 	lock(&monitor);
 	(void)fprintf(stderr, "Cart %d from %c arrives at intersection\n", 
 							cart->num, cart->dir);
-	while (next_cart != cart->dir) {
+	
+	while (first == 1 && next_cart != cart->dir) {
 		(void)fprintf(stderr, "Cart %d from %c waiting before entering the intersection\n",
 							cart->num, cart->dir);
+		if (first != 0)
 		switch (cart->dir) {
 			case Q_NORTH:
 				wait(&north_rail, &monitor);
@@ -106,6 +110,7 @@ monitor_arrive(struct cart_t *cart)
 		}
 	}
 
+	first = 1;	/* a cart has been proceeded */
 	(void)fprintf(stderr, "Cart %d from %c allowed to proceed in to intersection\n",
 							cart->num, cart->dir);
 	unlock(&monitor);
