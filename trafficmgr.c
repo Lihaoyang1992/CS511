@@ -129,22 +129,22 @@ main(int argc, char *argv[])
 			return EXIT_FAILURE;
 		}
 	}
-
+	/*
 	for (i = 0; i < DIR; i++) {
 		if (i == 0)
-			(void)fprintf(stderr, "north queue has %d carts",
+			(void)fprintf(stderr, "north queue has %d carts\n",
 							q_cartIsWaiting(Q_NORTH));
 		else if (i == 1)
-			(void)fprintf(stderr, "west queue has %d carts",
+			(void)fprintf(stderr, "west queue has %d carts\n",
 							q_cartIsWaiting(Q_WEST));
 		else if (i == 2)
-			(void)fprintf(stderr, "south queue has %d carts",
+			(void)fprintf(stderr, "south queue has %d carts\n",
 							q_cartIsWaiting(Q_SOUTH));
 		else if (i == 3)
-			(void)fprintf(stderr, "east queue has %d carts",
+			(void)fprintf(stderr, "east queue has %d carts\n",
 							q_cartIsWaiting(Q_EAST));
 	}
-
+	*/
 	monitor_shutdown();
 	q_shutdown();
 	return 0;
