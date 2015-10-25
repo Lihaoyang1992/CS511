@@ -164,6 +164,9 @@ monitor_leave(struct cart_t *cart)
 		}
 	}
 
+	/* no cart in queues set first to 0 */
+	first = 0;
+
 	unlock(&monitor);
 }
 
