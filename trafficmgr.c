@@ -132,16 +132,16 @@ main(int argc, char *argv[])
 
 	for (i = 0; i < DIR; i++) {
 		if (i == 0)
-			(void)sprintf(stderr, "north queue has %d carts",
+			(void)fprintf(stderr, "north queue has %d carts",
 							q_cartIsWaiting(Q_NORTH));
 		else if (i == 1)
-			(void)sprintf(stderr, "west queue has %d carts",
+			(void)fprintf(stderr, "west queue has %d carts",
 							q_cartIsWaiting(Q_WEST));
 		else if (i == 2)
-			(void)sprintf(stderr, "south queue has %d carts",
+			(void)fprintf(stderr, "south queue has %d carts",
 							q_cartIsWaiting(Q_SOUTH));
 		else if (i == 3)
-			(void)sprintf(stderr, "east queue has %d carts",
+			(void)fprintf(stderr, "east queue has %d carts",
 							q_cartIsWaiting(Q_EAST));
 	}
 
