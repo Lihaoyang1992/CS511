@@ -130,7 +130,8 @@ monitor_cross(struct cart_t *cart)
 
 	(void)fprintf(stderr, "Cart %d from %c cross intersection\n",
 							cart->num, cart->dir);
-	(void)fprintf(stderr, "Time consumed: ");
+	(void)fprintf(stderr, "Cart %d from %c crossing: ", 
+							cart->num, cart->dir);
 	for (i = 0; i < TIME_PASS; i++) {
 		(void)fprintf(stderr, "%d sec..", i + 1);
 		sleep(1);
@@ -151,7 +152,6 @@ monitor_leave(struct cart_t *cart)
 	for (next_dir = get_right_dir(cart->dir); next_dir != cart->dir; next_dir = get_right_dir(next_dir)) {
 		(void)fprintf(stderr, "Try to signal %c thread to proceed intersection\n",
 								next_dir);
-		printf("q_cartIsWaiting %c is %d\n", next_dir,q_cartIsWaiting(next_dir));
 		if (q_cartIsWaiting(next_dir)) {
 			next_cart = next_dir;
 
