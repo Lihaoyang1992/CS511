@@ -86,11 +86,11 @@ monitor_init()
 void
 monitor_arrive(struct cart_t *cart)
 {
+	lock(&monitor);
 	(void)fprintf(stderr, "Cart %d from %c arrives at intersection\n", 
 							cart->num, cart->dir);
 	(void)fprintf(stderr, "Cart %d from %c waiting before entering the intersection\n",
 							cart->num, cart->dir);
-	lock(&monitor);
 	while (first == 1 && next_cart != cart->dir) {
 		if (first != 0)
 		switch (cart->dir) {
