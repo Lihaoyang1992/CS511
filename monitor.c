@@ -86,13 +86,12 @@ monitor_init()
 void
 monitor_arrive(struct cart_t *cart)
 {
-	lock(&monitor);
 	(void)fprintf(stderr, "Cart %d from %c arrives at intersection\n", 
 							cart->num, cart->dir);
-	
-	while (first == 1 && next_cart != cart->dir) {
-		(void)fprintf(stderr, "Cart %d from %c waiting before entering the intersection\n",
+	(void)fprintf(stderr, "Cart %d from %c waiting before entering the intersection\n",
 							cart->num, cart->dir);
+	lock(&monitor);
+	while (first == 1 && next_cart != cart->dir) {
 		if (first != 0)
 		switch (cart->dir) {
 			case Q_NORTH:
@@ -133,7 +132,7 @@ monitor_cross(struct cart_t *cart)
 							cart->num, cart->dir);
 	(void)fprintf(stderr, "Time consumed: ");
 	for (i = 0; i < TIME_PASS; i++) {
-		(void)fprintf(stderr, "%d sec..", i);
+		(void)fprintf(stderr, "%d sec..", i + 1);
 		sleep(1);
 	}
 	(void)fprintf(stderr, "\n");
