@@ -126,11 +126,17 @@ monitor_cross(struct cart_t *cart)
 	(void)fprintf(stderr, "Cart %d from %c enter intersection\n",
 							cart->num, cart->dir);
 
+	/* cart entered intersection */
 	q_cartHasEntered(cart->dir);
 
 	(void)fprintf(stderr, "Cart %d from %c cross intersection\n",
 							cart->num, cart->dir);
-
+	(void)fprintf(stderr, "Time consumed: ");
+	for (i = 0; i < TIME_PASS; i++) {
+		(void)fprintf("%d sec..", i);
+		sleep(1);
+	}
+	(void)fprintf(stderr, "%s\n", );
 	unlock(&monitor);
 }
 
