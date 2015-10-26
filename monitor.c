@@ -133,10 +133,10 @@ monitor_cross(struct cart_t *cart)
 							cart->num, cart->dir);
 	(void)fprintf(stderr, "Time consumed: ");
 	for (i = 0; i < TIME_PASS; i++) {
-		(void)fprintf("%d sec..", i);
+		(void)fprintf(stderr, "%d sec..", i);
 		sleep(1);
 	}
-	(void)fprintf(stderr, "%s\n", );
+	(void)fprintf(stderr, "\n");
 	unlock(&monitor);
 }
 
