@@ -9,6 +9,8 @@
 #include "cart.h"
 #include "q.h"
 
+#define TIME_PASS	10
+
 pthread_mutex_t	monitor;
 pthread_cond_t	north_rail;
 pthread_cond_t	west_rail;
