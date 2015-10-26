@@ -151,7 +151,7 @@ monitor_leave(struct cart_t *cart)
 	for (next_dir = get_right_dir(cart->dir); next_dir != cart->dir; next_dir = get_right_dir(next_dir)) {
 		(void)fprintf(stderr, "Try to signal %c thread to proceed intersection\n",
 								next_dir);
-		printf("q_cartIsWaiting %d is %d\n", next_dir,q_cartIsWaiting(next_dir));
+		printf("q_cartIsWaiting %c is %d\n", next_dir,q_cartIsWaiting(next_dir));
 		if (q_cartIsWaiting(next_dir)) {
 			next_cart = next_dir;
 
@@ -169,6 +169,7 @@ monitor_leave(struct cart_t *cart)
 					signal(&east_rail);
 					break;
 			}
+			break;
 		}
 	}
 
