@@ -101,7 +101,7 @@ main(int argc, char *argv[])
 	q_print(Q_NORTH);
 	q_print(Q_WEST);
 	q_print(Q_SOUTH);
-	q_print(Q_WEST);
+	q_print(Q_EAST);
 
 	for (i = 0; i < DIR; i++) {
 		char dir;
